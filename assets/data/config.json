@@ -1,0 +1,50 @@
+{
+     "Cheats": {
+          "Speed": 1,
+          "No Misses": false,
+          "God Mode": false
+     },
+     "User Settings": {
+          "Keybinds": [
+               "D",
+               "F",
+               "K",
+               "L"
+          ],
+          "Note Colors": [
+               [
+                    0,
+                    255,
+                    255
+               ],
+               [
+                    0,
+                    255,
+                    255
+               ],
+               [
+                    0,
+                    255,
+                    255
+               ],
+               [
+                    0,
+                    255,
+                    255
+               ]
+          ],
+          "Dev Mode": false
+     },
+     "User Data": {
+          "Songs": [
+               {
+                    "Name": "Sugar Daddy Adventure",
+                    "Score": 0
+               },
+               {
+                    "Name": "Hot Mama Titties",
+                    "Score": 0
+               }
+          ]
+     }
+}
