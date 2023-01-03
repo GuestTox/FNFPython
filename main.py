@@ -1,13 +1,41 @@
 import pygame as pg, json, random
 
 pg.init()
+pg.mixer.init()
+
+score = 0
+misses = 0
+
+GameVersion = 1.1
+
+def changeScore(pos="None"):
+    global score
+    if pos is True:
+        score += 50 
+        return score
+    elif pos is False:
+        score -= 50
+        return score
+    elif pos == "None":
+        return score
+
+def Miss(add=None):
+    global misses
+    if add == "Yes": misses += 1
+    return misses
 
 def loadConfig():
     try:
         with open("assets/data/config.json") as file:
-            return json.load(file)
-    except:
-        config = {
+            if json.load(file)["Information"]["Version"] == GameVersion:
+                return json.load(file)
+            else:
+                config = {
+            "Information": {
+                "Version": GameVersion,
+                "Author": "GuestTox",
+                "YACINE EST PD": True
+            },
             "Cheats": {
                 "Speed": 1,
                 "No Misses": False,
@@ -17,18 +45,27 @@ def loadConfig():
                 "Keybinds": ["D", "F", "K", "L"],
                 "Note Colors": [(0, 255, 255), (0, 255, 255), (0, 255, 255), (0, 255, 255)],
                 "Dev Mode": False
+            }
+        }
+                with open("assets/data/config.json", "w") as file:
+                    json.dump(config, file, indent=5)
+                    return config
+    except:
+        config = {
+            "Information": {
+                "Version": GameVersion,
+                "Author": "GuestTox",
+                "YACINE EST PD": True
             },
-            "User Data": {
-                "Songs": [
-                    {
-                    "Name": "Sugar Daddy Adventure",
-                    "Score": 0
-                    },
-                    {
-                    "Name": "Hot Mama Titties",
-                    "Score": 0
-                    },
-                ]
+            "Cheats": {
+                "Speed": 1,
+                "No Misses": False,
+                "God Mode": False
+            },
+            "User Settings": {
+                "Keybinds": ["D", "F", "K", "L"],
+                "Note Colors": [(0, 255, 255), (0, 255, 255), (0, 255, 255), (0, 255, 255)],
+                "Dev Mode": False
             }
         }
         with open("assets/data/config.json", "w") as file:
@@ -46,6 +83,7 @@ class Note():
         self.y = 600 + self.yDelay
         self.x = self.arrowParent.x
         self.isHit = False
+        self.isVisible = True
 
     def draw(self, x, y):
         self.x = x
@@ -53,19 +91,28 @@ class Note():
         screen.blit(self.image, (self.x, self.y))
 
     def move(self):
-        if self.y <= -50:
+        if self.y <= -50 or not self.isVisible:
             self.y = 500 + self.yDelay
+            self.isVisible = True
         else:
             self.y -= self.speed
-        if self.isHit:
+        if self.y <= -50:
+            changeScore(False)
+            Miss("Yes")
+        if self.isHit or not self.isVisible:
             self.y = 500 + self.yDelay
             self.isHit = False
+            self.isVisible = True
         self.draw(self.x, self.y)
     
     def checkHit(self):
         if self.arrowParent.y - 50 < self.y < self.arrowParent.y + 50:
             self.isHit = True
-            print(f"Hit {self.x}")
+            changeScore(True)
+        elif self.arrowParent.y + 50 < self.y < self.arrowParent.y + 300:
+            self.isVisible = False
+            changeScore(False)
+            Miss("Yes")
 
 class Arrow():
     def __init__(self, rotation) -> None:
@@ -90,6 +137,7 @@ class Game():
 
         global screen
         screen = pg.display.set_mode(self.WINDOW)
+        self.score = 0
         pg.display.set_caption(self.TITLE)
 
         self.leftArrow = Arrow(90.0)
@@ -101,16 +149,59 @@ class Game():
         self.downNote = Note(self.downArrow, random.randint(500, 900))
         self.rightNote = Note(self.rightArrow, random.randint(500, 900))
 
+        self.font = pg.font.SysFont("arialblack", 40)
+
         self.arrows = [self.leftArrow, self.upArrow, self.downArrow, self.rightArrow]
         self.notes = [self.leftNote, self.upNote, self.downNote, self.rightNote]
 
         self.mainloop()
 
-    def mainloop(self):
-        running = True
+    def drawText(self, text, font, textColor, x, y):
+        img = font.render(text, True, textColor)
+        screen.blit(img, (x, y))
 
-        while running:
+    def changeScore(self, pos):
+        if pos: self.score += 50
+        elif not pos: self.score -= 50
+
+    def mainloop(self):
+        self.running = True
+        self.start = False
+
+        pg.mixer.music.load("assets/music/freakyMenu.ogg")
+        pg.mixer.music.set_volume(1.0)
+        pg.mixer.music.play()
+
+        self.music = "menu"
+
+        while self.running:
             screen.fill((255, 255, 255))
+
+            self.color = None
+
+            while not self.start:
+                self.color = random.randint(0, 50)
+                self.color = (self.color, self.color, self.color)
+                self.drawText("Press ENTER to start.", self.font, self.color, 250, 200)
+                pg.display.flip()
+                for event in pg.event.get():
+                    if event.type == pg.QUIT:
+                        self.start = True
+                        self.running = False
+                    elif event.type == pg.KEYDOWN:
+                        if event.key == pg.K_RETURN:
+                            self.start = True
+
+            if self.music == "menu":
+                self.music = "bopeebo"
+                pg.mixer.music.stop()
+                self.inst = pg.mixer.Sound("assets/songs/bopeebo/Inst.ogg")
+                pg.mixer.music.set_volume(1.0)
+                pg.mixer.Channel(0).play(self.inst)
+                self.voices = pg.mixer.Sound("assets/songs/bopeebo/Voices.ogg")
+                pg.mixer.music.set_volume(1.0)
+                pg.mixer.Channel(1).play(self.voices)
+
             posX = 430
             for arrow in self.arrows:
                 arrow.draw(posX, 50)
@@ -119,12 +210,16 @@ class Game():
                 note.x = note.arrowParent.x
                 note.yDelay = random.randint(500, 750)
                 note.move()
+            self.drawText(f"Score: {changeScore()}", self.font, (0, 0, 0), 50, 50)
+            self.drawText(f"Misses: {Miss(None)}", self.font, (0, 0, 0), 50, 100)
             pg.display.flip()
 
             for event in pg.event.get():
                 if event.type == pg.QUIT:
-                    running = False
+                    self.running = False
                 elif event.type == pg.KEYDOWN:
+                    if event.key == pg.K_ESCAPE:
+                        self.start =  False
                     if event.key == pg.K_d or event.key == pg.K_LEFT:
                         # if self.leftArrow.light == 0:
                             self.leftArrow.light = True
@@ -156,4 +251,5 @@ class Game():
                             self.rightArrow.light = False
 
 if __name__ == "__main__":
+    global FNFGame
     FNFGame = Game()
