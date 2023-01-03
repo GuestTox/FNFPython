@@ -12,6 +12,11 @@ To be honest, I don't know.
 * Music
 * Main Menu
 * More songs
+* Characters and backgrounds
+* Arrow customization
+* Settings menu
+* Chart editor
+* Mod support
 
 # Credits:
 
