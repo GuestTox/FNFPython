@@ -1,0 +1,43 @@
+{
+     "Information": {
+          "Version": 1.2,
+          "Author": "GuestTox",
+          "YACINE EST PD": true
+     },
+     "Cheats": {
+          "Speed Multiplier": 1,
+          "No Misses": false,
+          "God Mode": false
+     },
+     "User Settings": {
+          "Keybinds": [
+               "D",
+               "F",
+               "K",
+               "L"
+          ],
+          "Note Colors": [
+               [
+                    0,
+                    255,
+                    255
+               ],
+               [
+                    0,
+                    255,
+                    255
+               ],
+               [
+                    0,
+                    255,
+                    255
+               ],
+               [
+                    0,
+                    255,
+                    255
+               ]
+          ],
+          "Dev Mode": false
+     }
+}

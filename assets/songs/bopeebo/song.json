@@ -1,0 +1,71 @@
+{
+    "Name": "Bopeebo",
+    "Left Character": "",
+    "Right Character": "",
+    "Middle Character": "",
+    "Starting Delay": 30,
+    "Speed": 1,
+    "Needs Voices": true,
+    "Chart": [
+        {
+            "Arrow Parent": 1,
+            "Delay": 50
+        },
+        {
+            "Arrow Parent": 3,
+            "Delay": 150
+        },
+        {
+            "Arrow Parent": 1,
+            "Delay": 300
+        },
+        {
+            "Arrow Parent": 2,
+            "Delay": 75
+        },
+        {
+            "Arrow Parent": 4,
+            "Delay": 275
+        },
+        {
+            "Arrow Parent": 1,
+            "Delay": 150
+        },
+        {
+            "Arrow Parent": 3,
+            "Delay": 200
+        },
+        {
+            "Arrow Parent": 1,
+            "Delay": 0
+        },
+        {
+            "Arrow Parent": 2,
+            "Delay": 150
+        },
+        {
+            "Arrow Parent": 4,
+            "Delay": 167
+        },
+        {
+            "Arrow Parent": 1,
+            "Delay": 410
+        },
+        {
+            "Arrow Parent": 3,
+            "Delay": 0
+        },
+        {
+            "Arrow Parent": 1,
+            "Delay": 200
+        },
+        {
+            "Arrow Parent": 2,
+            "Delay": 169
+        },
+        {
+            "Arrow Parent": 4,
+            "Delay": 0
+        }
+    ]
+}

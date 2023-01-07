@@ -1,0 +1,63 @@
+{
+    "Name": "Dad Battle",
+    "Left Character": "",
+    "Right Character": "",
+    "Middle Character": "",
+    "Starting Delay": 10,
+    "Speed": 1,
+    "Needs Voices": true,
+    "Chart": [
+        {
+            "Arrow Parent": 1,
+            "Delay": 50
+        },
+        {
+            "Arrow Parent": 3,
+            "Delay": 100
+        },
+        {
+            "Arrow Parent": 2,
+            "Delay": 150
+        },
+        {
+            "Arrow Parent": 1,
+            "Delay": 250
+        },
+        {
+            "Arrow Parent": 4,
+            "Delay": 50
+        },
+        {
+            "Arrow Parent": 3,
+            "Delay": 100
+        },
+        {
+            "Arrow Parent": 2,
+            "Delay": 150
+        },
+        {
+            "Arrow Parent": 1,
+            "Delay": 250
+        },
+        {
+            "Arrow Parent": 4,
+            "Delay": 50
+        },
+        {
+            "Arrow Parent": 3,
+            "Delay": 100
+        },
+        {
+            "Arrow Parent": 2,
+            "Delay": 150
+        },
+        {
+            "Arrow Parent": 1,
+            "Delay": 250
+        },
+        {
+            "Arrow Parent": 4,
+            "Delay": 50
+        }
+    ]
+}
