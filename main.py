@@ -6,7 +6,7 @@ pg.mixer.init()
 score = 0
 misses = 0
 
-GameVersion = 1.1
+GameVersion = 1.2
 
 def changeScore(pos="None"):
     global score
