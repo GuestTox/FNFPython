@@ -10,10 +10,10 @@ Edit: I still don't know.
 
 # To do:
 
-[X] Charts
-[X] Music
+[x] Charts
+[x] Music
 [ ] Main Menu
-[X] More songs
+[x] More songs
 [ ] Characters and backgrounds
 [ ] Arrow customization
 [ ] Settings menu
