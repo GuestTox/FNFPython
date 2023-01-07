@@ -1,4 +1,4 @@
-import pygame as pg, json, random, time
+import pygame as pg, json, random
 
 pg.init()
 pg.mixer.init()
