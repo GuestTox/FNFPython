@@ -10,15 +10,15 @@ Edit: I still don't know.
 
 # To do:
 
-[x] Charts
-[x] Music
-[ ] Main Menu
-[x] More songs
-[ ] Characters and backgrounds
-[ ] Arrow customization
-[ ] Settings menu
-[ ] Chart editor
-[ ] Mod support
+- [x] Charts
+- [x] Music
+- [ ] Main Menu
+- [x] More songs
+- [ ] Characters and backgrounds
+- [ ] Arrow customization
+- [ ] Settings menu
+- [ ] Chart editor
+- [ ] Mod support
 
 # Credits:
 
