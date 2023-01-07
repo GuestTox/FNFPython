@@ -1,4 +1,4 @@
-import pygame as pg, json, random
+import pygame as pg, json, random, time
 
 pg.init()
 pg.mixer.init()
@@ -58,7 +58,7 @@ def loadConfig():
                 "YACINE EST PD": True
             },
             "Cheats": {
-                "Speed": 1,
+                "Speed Multiplier": 1,
                 "No Misses": False,
                 "God Mode": False
             },
@@ -78,7 +78,7 @@ class Note():
     def __init__(self, arrowParent, yDelay) -> None:
         self.arrowParent = arrowParent
         self.image = self.arrowParent.image
-        self.speed = config["Cheats"]["Speed"]
+        self.speed = config["Cheats"]["Speed Multiplier"]
         self.yDelay = yDelay
         self.y = 600 + self.yDelay
         self.x = self.arrowParent.x
@@ -106,13 +106,14 @@ class Note():
         self.draw(self.x, self.y)
     
     def checkHit(self):
-        if self.arrowParent.y - 50 < self.y < self.arrowParent.y + 50:
-            self.isHit = True
-            changeScore(True)
-        elif self.arrowParent.y + 50 < self.y < self.arrowParent.y + 300:
-            self.isVisible = False
-            changeScore(False)
-            Miss("Yes")
+        if self.arrowParent.light:
+            if self.arrowParent.y - 50 < self.y < self.arrowParent.y + 50:
+                self.isHit = True
+                changeScore(True)
+            elif self.arrowParent.y + 50 < self.y < self.arrowParent.y + 150:
+                self.isVisible = False
+                changeScore(False)
+                Miss("Yes")
 
 class Arrow():
     def __init__(self, rotation) -> None:
@@ -152,7 +153,6 @@ class Game():
         self.font = pg.font.SysFont("arialblack", 40)
 
         self.arrows = [self.leftArrow, self.upArrow, self.downArrow, self.rightArrow]
-        self.notes = [self.leftNote, self.upNote, self.downNote, self.rightNote]
 
         self.mainloop()
 
@@ -164,91 +164,137 @@ class Game():
         if pos: self.score += 50
         elif not pos: self.score -= 50
 
+    def loadSong(self, song):
+        with open("assets\\data\\gameData.json") as file: self.gameData = json.load(file)
+        self.selectedSong = self.gameData["Songs"][song - 1]
+
+        with open(f"assets\\songs\\{self.selectedSong}\\song.json") as file: self.selectedSongData = json.load(file)
+        self.selectedSongInst = pg.mixer.Sound(f"assets\\songs\\{self.selectedSong}\\Inst.ogg")
+        if self.selectedSongData["Needs Voices"]: self.selectedSongVoices = pg.mixer.Sound(f"assets\\songs\\{self.selectedSong}\\Voices.ogg")
+        else: self.selectedSongVoices = None
+        self.selectedSongChart = self.selectedSongData["Chart"]
+        self.selectedSongLeftCharacter = self.selectedSongData["Left Character"]
+        self.selectedSongRightCharacter = self.selectedSongData["Right Character"]
+        self.selectedSongMiddleCharacter = self.selectedSongData["Middle Character"]
+        self.selectedSongSpeed = self.selectedSongData["Speed"]
+        self.selectedSongStartingDelay = self.selectedSongData["Starting Delay"]
+        
+        self.songLoaded = False
+    
+    def mainMenu(self):
+        self.color = random.randint(0, 50)
+        self.color = (self.color, self.color, self.color)
+        self.drawText("Press ENTER to start.", self.font, self.color, 250, 200)
+        pg.display.flip()
+        for event in pg.event.get():
+            if event.type == pg.QUIT: self.running = False
+            elif event.type == pg.KEYDOWN:
+                if event.key == pg.K_RETURN:
+                    self.onMainMenu = False
+                    self.songSelecting = True       
+                    self.selectedSongID = 1
+
+    def songSelector(self):
+        self.drawText("SELECT YOUR SONG", self.font, (0,0,0), 50, 50)
+        self.songsAvailable = ["bopeebo", "fresh", "dad battle"]
+        self.drawText(self.songsAvailable[self.selectedSongID - 1], self.font, (0,0,0), 50, 200)
+        pg.display.flip()
+        for event in pg.event.get():
+            if event.type == pg.QUIT: self.running = False
+            elif event.type == pg.KEYDOWN:
+                if event.key == pg.K_RETURN:
+                    self.loadSong(self.selectedSongID)
+                    self.songSelecting = False
+                    self.songSelected = True
+                if event.key == pg.K_UP or event.key == pg.K_f:
+                    if self.selectedSongID >= len(self.songsAvailable): self.selectedSongID = len(self.songsAvailable) - 1
+                    else: self.selectedSongID -= 1
+                elif event.key == pg.K_DOWN or event.key == pg.K_k:
+                    if self.selectedSongID < 0 or self.selectedSongID >= len(self.songsAvailable): self.selectedSongID = 1
+                    else: self.selectedSongID += 1
+
+    def songPlay(self):
+        if not self.songLoaded:
+            pg.mixer.music.stop()
+            self.inst = pg.mixer.Sound(f"assets/songs/{self.selectedSong}/Inst.ogg")
+            pg.mixer.music.set_volume(1.0)
+            pg.mixer.Channel(0).play(self.inst)
+            self.voices = pg.mixer.Sound(f"assets/songs/{self.selectedSong}/Voices.ogg")
+            pg.mixer.music.set_volume(1.0)
+            pg.mixer.Channel(1).play(self.voices)
+            self.songLoaded = True
+            self.notesLoaded = False
+            self.notes = []
+
+        posX = 430
+        for arrow in self.arrows:
+            arrow.draw(posX, 50)
+            posX += 60
+        if not self.notesLoaded:
+            for note in self.selectedSongChart:
+                dictionary = {
+                    1: self.leftArrow, 2: self.upArrow, 3: self.downArrow, 4: self.rightArrow
+                }
+                newNote = Note(arrowParent=dictionary.get(note["Arrow Parent"]), yDelay=self.selectedSongStartingDelay + note["Delay"])
+                newNote.speed = newNote.speed * self.selectedSongSpeed
+                self.selectedSongStartingDelay += note["Delay"]
+                self.notes.append(newNote)
+            self.notesLoaded = True
+        if self.notesLoaded:
+            for note in self.notes:
+                note.checkHit()
+                if note.isHit or not note.isVisible or note.y <= -50: note.y = -69
+                else: note.move()
+
+        self.drawText(f"Score: {changeScore()}", self.font, (0, 0, 0), 50, 50)
+        self.drawText(f"Misses: {Miss(None)}", self.font, (0, 0, 0), 50, 100)
+        pg.display.flip()
+
+        for event in pg.event.get():
+            if event.type == pg.QUIT:
+                        self.running = False
+            elif event.type == pg.KEYDOWN:
+                if event.key == pg.K_ESCAPE:
+                    self.pause = True
+                if event.key == pg.K_d or event.key == pg.K_LEFT:
+                    self.leftArrow.light = True
+                elif event.key == pg.K_f or event.key == pg.K_UP:
+                    self.upArrow.light = True
+                elif event.key == pg.K_k or event.key == pg.K_DOWN:
+                    self.downArrow.light = True
+                elif event.key == pg.K_l or event.key == pg.K_RIGHT:
+                    self.rightArrow.light = True
+            elif event.type == pg.KEYUP:
+                if event.key == pg.K_d or event.key == pg.K_LEFT:
+                    self.leftArrow.light = False
+                elif event.key == pg.K_f or event.key == pg.K_UP:
+                    self.upArrow.light = False
+                elif event.key == pg.K_k or event.key == pg.K_DOWN:
+                    self.downArrow.light = False
+                elif event.key == pg.K_l or event.key == pg.K_RIGHT:
+                    self.rightArrow.light = False
+
     def mainloop(self):
         self.running = True
-        self.start = False
+        self.onMainMenu = True
+        self.songSelecting = False
+        self.songSelected = False
 
         pg.mixer.music.load("assets/music/freakyMenu.ogg")
         pg.mixer.music.set_volume(1.0)
         pg.mixer.music.play()
 
-        self.music = "menu"
-
         while self.running:
             screen.fill((255, 255, 255))
 
-            self.color = None
+            if self.onMainMenu:
+                self.mainMenu()
 
-            while not self.start:
-                self.color = random.randint(0, 50)
-                self.color = (self.color, self.color, self.color)
-                self.drawText("Press ENTER to start.", self.font, self.color, 250, 200)
-                pg.display.flip()
-                for event in pg.event.get():
-                    if event.type == pg.QUIT:
-                        self.start = True
-                        self.running = False
-                    elif event.type == pg.KEYDOWN:
-                        if event.key == pg.K_RETURN:
-                            self.start = True
+            if self.songSelecting:
+                self.songSelector()
 
-            if self.music == "menu":
-                self.music = "bopeebo"
-                pg.mixer.music.stop()
-                self.inst = pg.mixer.Sound("assets/songs/bopeebo/Inst.ogg")
-                pg.mixer.music.set_volume(1.0)
-                pg.mixer.Channel(0).play(self.inst)
-                self.voices = pg.mixer.Sound("assets/songs/bopeebo/Voices.ogg")
-                pg.mixer.music.set_volume(1.0)
-                pg.mixer.Channel(1).play(self.voices)
-
-            posX = 430
-            for arrow in self.arrows:
-                arrow.draw(posX, 50)
-                posX += 60
-            for note in self.notes:
-                note.x = note.arrowParent.x
-                note.yDelay = random.randint(500, 750)
-                note.move()
-            self.drawText(f"Score: {changeScore()}", self.font, (0, 0, 0), 50, 50)
-            self.drawText(f"Misses: {Miss(None)}", self.font, (0, 0, 0), 50, 100)
-            pg.display.flip()
-
-            for event in pg.event.get():
-                if event.type == pg.QUIT:
-                    self.running = False
-                elif event.type == pg.KEYDOWN:
-                    if event.key == pg.K_ESCAPE:
-                        self.start =  False
-                    if event.key == pg.K_d or event.key == pg.K_LEFT:
-                        # if self.leftArrow.light == 0:
-                            self.leftArrow.light = True
-                            self.leftNote.checkHit()
-                    elif event.key == pg.K_f or event.key == pg.K_UP:
-                        # if self.upArrow.light == 0:
-                            self.upArrow.light = True
-                            self.upNote.checkHit()
-                    elif event.key == pg.K_k or event.key == pg.K_DOWN:
-                        # if self.downArrow.light == 0:
-                            self.downArrow.light = True
-                            self.downNote.checkHit()
-                    elif event.key == pg.K_l or event.key == pg.K_RIGHT:
-                        # if self.rightArrow.light == 0:
-                            self.rightArrow.light = True
-                            self.rightNote.checkHit()
-                elif event.type == pg.KEYUP:
-                    if event.key == pg.K_d or event.key == pg.K_LEFT:
-                        # if self.leftArrow.light == 0:
-                            self.leftArrow.light = False
-                    elif event.key == pg.K_f or event.key == pg.K_UP:
-                        # if self.upArrow.light == 0:
-                            self.upArrow.light = False
-                    elif event.key == pg.K_k or event.key == pg.K_DOWN:
-                        # if self.downArrow.light == 0:
-                            self.downArrow.light = False
-                    elif event.key == pg.K_l or event.key == pg.K_RIGHT:
-                        # if self.rightArrow.light == 0:
-                            self.rightArrow.light = False
+            if self.songSelected:
+                self.songPlay()
 
 if __name__ == "__main__":
     global FNFGame
