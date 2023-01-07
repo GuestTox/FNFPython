@@ -1,22 +1,24 @@
 # Friday Night Funkin: Pythonic Edition
 
-FNF but it's Pythonic.
+Friday Night Funkin but it's Pythonic... In Pygame.
 
 # Why?
 
 To be honest, I don't know.
 
+Edit: I still don't know.
+
 # To do:
 
-* Charts
-* Music
-* Main Menu
-* More songs
-* Characters and backgrounds
-* Arrow customization
-* Settings menu
-* Chart editor
-* Mod support
+[X] Charts
+[X] Music
+[ ] Main Menu
+[X] More songs
+[ ] Characters and backgrounds
+[ ] Arrow customization
+[ ] Settings menu
+[ ] Chart editor
+[ ] Mod support
 
 # Credits:
 
