@@ -1,6 +1,6 @@
 # Friday Night Funkin: Pythonic Edition
 
-Friday Night Funkin but it's Pythonic... In Pygame.
+Friday Night Funkin but it's Pythonic.
 
 # Why?
 
@@ -22,4 +22,4 @@ Edit: I still don't know.
 
 # Credits:
 
-Made with love by GuestTox.
+Made with ❤ by GuestTox.
