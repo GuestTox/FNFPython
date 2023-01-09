@@ -6,13 +6,14 @@ Friday Night Funkin but it's Pythonic.
 
 To be honest, I don't know.
 
-Edit: I still don't know.
-
 # To do:
 
 - [x] Charts
 - [x] Music
 - [ ] Main Menu
+- [ ] Game UI
+- [ ] Low graphic settings
+- [ ] Week system
 - [x] More songs
 - [ ] Characters and backgrounds
 - [ ] Arrow customization
