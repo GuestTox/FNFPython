@@ -20,6 +20,7 @@ To be honest, I don't know.
 - [ ] Settings menu
 - [ ] Chart editor
 - [ ] Mod support
+- [ ] Mod maker
 
 # Credits:
 
