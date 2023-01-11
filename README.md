@@ -10,14 +10,17 @@ To be honest, I don't know.
 
 - [x] Charts
 - [x] Music
-- [ ] Main Menu
+- [x] Main Menu
 - [ ] Game UI
 - [ ] Low graphic settings
 - [ ] Week system
 - [x] More songs
 - [ ] Characters and backgrounds
 - [ ] Arrow customization
+- [ ] Multi-key system
 - [ ] Settings menu
+- [ ] Dialogues
+- [ ] Cutscenes
 - [ ] Chart editor
 - [ ] Mod support
 - [ ] Mod maker
