@@ -10,13 +10,14 @@ To be honest, I don't know.
 
 - [x] Charts
 - [x] Music
-- [x] Main Menu
+- [x] Main menu
 - [ ] Game UI
 - [ ] Low graphic settings
 - [ ] Week system
 - [x] More songs
 - [ ] Characters and backgrounds
 - [ ] Arrow customization
+- [ ] Custom keybinds
 - [ ] Multi-key system
 - [ ] Settings menu
 - [ ] Dialogues
