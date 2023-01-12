@@ -11,7 +11,9 @@ To be honest, I don't know.
 - [x] Charts
 - [x] Music
 - [x] Main menu
+- [ ] Game stats and info
 - [ ] Game UI
+- [ ] Saving score and stats
 - [ ] Low graphic settings
 - [ ] Week system
 - [x] More songs
