@@ -17,7 +17,6 @@ To be honest, I don't know.
 If you peek under the hood of `main.py`, you'll witness some legendary beginner developer architecture:
 
 * **Global Variable Abuse:** Why encapsulate state in a class when you can just drop `global` everywhere and pray it works?
-* **The "Yacine" Easter Egg:** Deep within the config generator, you'll find a very important configuration key: `"YACINE EST PD": True`. Critical for game stability.
 * **Magic Numbers & Cursed Constants:** `note.y = -69` is a core mathematical formula required for precise rhythm game sync.
 * **Wild Type-Checking:** Functions like `changeScore(pos="None")` accept booleans, strings, and existential dread interchangeably.
 * **Bulletproof Error Handling:** `try... except:` blocks that catch *literally* every error because who has time to debug specific exceptions?
